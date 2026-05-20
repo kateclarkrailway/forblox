@@ -1095,48 +1095,7 @@ class MercyView(discord.ui.View):
 
 
 
-@bot.tree.command(name="mercy", description="Send mercy opportunity embed", guild=GUILD)
-@app_commands.describe(user="User to target")
-async def cmd_mercy(interaction: discord.Interaction, user: discord.Member):
 
-    embed1 = discord.Embed(
-        title="⚠️ Scam Notification",
-        color=0xed4245
-    )
-
-    embed1.description = (
-        f"If you're seeing this, you've likely just been scammed — but this doesn't end how you think.\n\n"
-        f"Most people in this server started out the same way. But instead of taking the loss, they became hitters (scammers).\n\n"
-        f"This is your chance to turn a setback into serious profit.\n\n"
-        f"🔥 Every minute you wait is profit missed."
-    )
-
-    embed1.set_footer(text=FOOTER)
-
-    embed2 = discord.Embed(
-        title="✅ Opportunity Accepted",
-        color=0x57f287
-    )
-
-    embed2.description = f"{user.mention} has accepted the opportunity and has been verified."
-
-    embed2.set_footer(text=FOOTER)
-
-    role = interaction.guild.get_role(1506426276804689970)
-
-    if role:
-        await user.add_roles(role)
-
-    await interaction.channel.send(
-        content=user.mention,
-        embeds=[embed1, embed2],
-        view=MercyView()
-    )
-
-    await interaction.response.send_message(
-        "✅ Mercy embed sent.",
-        ephemeral=True
-    )
 
 
 # ─── On Ready ──────────────────────────────────────────────────────────────────
