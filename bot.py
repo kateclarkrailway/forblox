@@ -1055,15 +1055,7 @@ class MercyView(discord.ui.View):
 
 
 MERCY_ROLES = [
-    ROLE["moderator"],
-    ROLE["head_mod"],
-    ROLE["lead_coord"],
-    ROLE["admin"],
-    ROLE["head_admin"],
-    ROLE["co_founder"],
-    ROLE["chief_exec"],
-    ROLE["director"],
-    ROLE["president"],
+    ROLE["middleman"],
 ]
 
 
