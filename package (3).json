@@ -1,0 +1,12 @@
+{
+  "name": "discord-welcome-forwarder",
+  "version": "1.0.0",
+  "description": "Forwards #welcome channel messages to your Discord server",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.15.3"
+  }
+}
