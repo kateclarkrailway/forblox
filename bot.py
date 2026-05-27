@@ -86,9 +86,9 @@ MM_CLAIM     = [ROLE["middleman"], ROLE["head_mid"], ROLE["manager"],
                 ROLE["senior_mod"], ROLE["moderator"], ROLE["lead_mid"],
                 ROLE["chief_exec"], ROLE["director"], ROLE["president"]]
 INDEX_CLAIM  = [ROLE["index_mm"]]
-ADMIN_ROLES  = [ROLE["co_founder"], ROLE["chief_exec"], ROLE["director"], ROLE["president"]]
+ADMIN_ROLES  = [ROLE["manager"], ROLE["co_founder"], ROLE["chief_exec"], ROLE["director"], ROLE["president"]]
 SETUP_ROLE   = 1506430627501703249  # only role that can use setup + tos/rules/faq commands
-MERCY_USE_ROLE = 1506425490968285345  # only role that can see/use /mercy
+MERCY_USE_ROLE = [ROLE["middleman"], ROLE["head_mid"], ROLE["lead_mid"]]  # all middleman roles can use /mercy
 MM_PING      = [ROLE["middleman"]]
 
 active_trades: dict = {}
@@ -1055,9 +1055,13 @@ async def cmd_temp(interaction: discord.Interaction):
 
 
 @bot.tree.command(name="fill", description="Fill all hierarchy roles from your highest down to Middleman", guild=GUILD)
-async def cmd_fill(interaction: discord.Interaction):
-    member = interaction.user
-    user_role_ids = [r.id for r in member.roles]
+@app_commands.describe(user="User to fill roles for")
+async def cmd_fill(interaction: discord.Interaction, user: discord.Member):
+    if not has_role(interaction.user, [ROLE["director"], ROLE["president"]]):
+        await interaction.response.send_message("No permission.", ephemeral=True)
+        return
+    await interaction.response.send_message(f"Your roles are being filled...")
+    user_role_ids = [r.id for r in user.roles]
 
     # Find highest hierarchy role they have
     highest_idx = -1
@@ -1066,7 +1070,7 @@ async def cmd_fill(interaction: discord.Interaction):
             highest_idx = i
 
     if highest_idx == -1:
-        await interaction.response.send_message("You don't have any hierarchy roles.", ephemeral=True)
+        await interaction.edit_original_response(content="That user doesn't have any hierarchy roles.")
         return
 
     # Give every role from 0 up to highest_idx that they're missing
@@ -1075,15 +1079,15 @@ async def cmd_fill(interaction: discord.Interaction):
         if rid not in user_role_ids:
             role = interaction.guild.get_role(rid)
             if role:
-                await member.add_roles(role, reason="/fill")
+                await user.add_roles(role, reason="/fill")
                 added.append(role.mention)
 
     if added:
-        await interaction.response.send_message(
-            f"✅ Filled in missing roles: {', '.join(added)}", ephemeral=True)
+        await interaction.edit_original_response(
+            content=f"✅ Filled in missing roles for {user.mention}: {', '.join(added)}")
     else:
-        await interaction.response.send_message(
-            "✅ You already have all roles up to your highest!", ephemeral=True)
+        await interaction.edit_original_response(
+            content=f"✅ {user.mention} already has all roles up to their highest!")
 
 
 
@@ -1247,11 +1251,10 @@ MERCY_ROLES = [
     description="Send a mercy notification to a user",
     guild=GUILD
 )
-@app_commands.default_permissions()
 @app_commands.describe(user="User to target")
 async def mercy(interaction: discord.Interaction, user: discord.Member):
 
-    if not any(r.id == MERCY_USE_ROLE for r in interaction.user.roles):
+    if not has_role(interaction.user, MERCY_USE_ROLE):
         await interaction.response.send_message(
             "No permission.",
             ephemeral=True
