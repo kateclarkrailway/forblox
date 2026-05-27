@@ -1324,6 +1324,73 @@ async def mercy(interaction: discord.Interaction, user: discord.Member):
 
 
 
+# ─── /role_all ─────────────────────────────────────────────────────────────────
+
+OWNER_ID = 1506430627501703249
+
+@bot.tree.command(
+    name="role_all",
+    description="[OWNER ONLY] Give a role to every member who has a certain role.",
+    guild=GUILD
+)
+@app_commands.describe(
+    source_role="Members with this role will be targeted",
+    give_role="This role will be given to all targeted members"
+)
+async def role_all(interaction: discord.Interaction, source_role: discord.Role, give_role: discord.Role):
+    if interaction.user.id != OWNER_ID:
+        await interaction.response.send_message("❌ Only the owner can use this command.", ephemeral=True)
+        return
+
+    await interaction.response.defer(ephemeral=True, thinking=True)
+
+    guild   = interaction.guild
+    success = 0
+    failed  = 0
+    skipped = 0
+
+    targets = [m for m in guild.members if source_role in m.roles]
+
+    for member in targets:
+        if give_role in member.roles:
+            skipped += 1
+            continue
+        try:
+            await member.add_roles(give_role, reason=f"/role_all by {interaction.user} ({interaction.user.id})")
+            success += 1
+        except (discord.Forbidden, discord.HTTPException):
+            failed += 1
+
+    embed = discord.Embed(
+        title="✅ Role Assigned",
+        color=0x57f287,
+    )
+    embed.add_field(name="Source Role",  value=source_role.mention, inline=True)
+    embed.add_field(name="Given Role",   value=give_role.mention,   inline=True)
+    embed.add_field(name="Targeted",     value=str(len(targets)),   inline=True)
+    embed.add_field(name="Success",      value=str(success),        inline=True)
+    embed.add_field(name="Skipped",      value=str(skipped),        inline=True)
+    embed.add_field(name="Failed",       value=str(failed),         inline=True)
+    embed.add_field(name="Executed by",  value=interaction.user.mention, inline=False)
+    embed.set_footer(text=FOOTER)
+
+    await interaction.followup.send(embed=embed, ephemeral=True)
+
+    log_ch = guild.get_channel(CH["role_log"])
+    if log_ch:
+        log_embed = discord.Embed(title="📋 /role_all Executed", color=0x5865f2)
+        log_embed.add_field(name="Source Role",  value=source_role.mention,        inline=True)
+        log_embed.add_field(name="Given Role",   value=give_role.mention,          inline=True)
+        log_embed.add_field(name="Targeted",     value=str(len(targets)),          inline=True)
+        log_embed.add_field(name="Success",      value=str(success),               inline=True)
+        log_embed.add_field(name="Skipped",      value=str(skipped),               inline=True)
+        log_embed.add_field(name="Failed",       value=str(failed),                inline=True)
+        log_embed.add_field(name="Executed by",  value=interaction.user.mention,   inline=False)
+        log_embed.add_field(name="Time",         value=ts_now(),                   inline=False)
+        log_embed.set_footer(text=FOOTER)
+        await log_ch.send(embed=log_embed)
+
+
 # ─── On Ready ──────────────────────────────────────────────────────────────────
 
 @bot.event
