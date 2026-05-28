@@ -1404,9 +1404,8 @@ async def role_all(interaction: discord.Interaction, source_role: discord.Role, 
     message="The message to send to each member"
 )
 async def dm_role(interaction: discord.Interaction, target: discord.Role, message: str):
-    # Only admin roles or the setup role can use this
-    allowed = ADMIN_ROLES + [SETUP_ROLE]
-    if not any(r.id in allowed for r in interaction.user.roles):
+    # Only the owner role can use this
+    if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
         return
 
