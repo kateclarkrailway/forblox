@@ -1537,14 +1537,13 @@ class D7Modal(discord.ui.Modal, title="D7 ARMY Ticket"):
 
     async def on_submit(self, interaction: discord.Interaction):
         cat = self.guild.get_channel(CH["d7_cat"])
+        d7_role = self.guild.get_role(1509270436322742342)
         ow = {
             self.guild.default_role: discord.PermissionOverwrite(read_messages=False),
             self.opener: discord.PermissionOverwrite(read_messages=True, send_messages=True),
         }
-        for rid in TICKET_STAFF:
-            r = self.guild.get_role(rid)
-            if r:
-                ow[r] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        if d7_role:
+            ow[d7_role] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
         ch = await self.guild.create_text_channel(
             name=f"d7-{self.opener.name}",
             category=cat,
