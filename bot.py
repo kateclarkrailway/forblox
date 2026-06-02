@@ -73,6 +73,8 @@ CH = {
     "role_log":       1506450406505582693,
     "app_setup":      1508489626426544128,
     "app_cat":        1508551992652599356,
+    "d7_setup":       1511477010281791710,
+    "d7_cat":         1511486325935833210,
 }
 
 FOOTER = "Powered by D7 ARMY Middleman Service"
@@ -1477,6 +1479,127 @@ async def dm_role(interaction: discord.Interaction, target: discord.Role, messag
         await log_ch.send(embed=log_embed)
 
 
+
+# ─── D7 ARMY Ticket System ────────────────────────────────────────────────────
+
+class D7TicketView(discord.ui.View):
+    def __init__(self, creator: str = "Unknown"):
+        super().__init__(timeout=None)
+        self.creator = creator
+
+    @discord.ui.button(label="Close", style=discord.ButtonStyle.danger,
+                       emoji="\U0001f512", custom_id="v:d7_close")
+    async def close(self, interaction: discord.Interaction, btn: discord.ui.Button):
+        if not has_role(interaction.user, TICKET_STAFF):
+            await interaction.response.send_message("No permission.", ephemeral=True)
+            return
+        ch  = interaction.channel
+        buf = await make_transcript(ch)
+        tr_ch = interaction.guild.get_channel(CH["transcript_ch"])
+        if tr_ch:
+            embed = discord.Embed(color=0x2b2d31, title=f"Transcript for D7 Ticket #{ch.name}")
+            embed.add_field(name="Ticket Creator", value=self.creator,             inline=False)
+            embed.add_field(name="Closed By",      value=interaction.user.mention, inline=False)
+            embed.add_field(name="Closed At",      value=ts_now(),                 inline=False)
+            embed.set_footer(text=FOOTER)
+            try:
+                await tr_ch.send(embed=embed,
+                                 file=discord.File(buf, filename=f"transcript-{ch.name}.txt"))
+            except discord.Forbidden:
+                await tr_ch.send(embed=embed)
+                await tr_ch.send(
+                    "\u26a0\ufe0f Could not attach transcript file \u2014 file uploads are disabled in this server. "
+                    "Grant the bot **Attach Files** permission in the transcript channel to enable this."
+                )
+        await interaction.response.send_message("Closing ticket in 5 seconds\u2026")
+        await asyncio.sleep(5)
+        await ch.delete()
+
+
+class D7Modal(discord.ui.Modal, title="D7 ARMY Ticket"):
+    offering = discord.ui.TextInput(
+        label="What are you offering for?",
+        style=discord.TextStyle.paragraph,
+        placeholder="Describe what you are offering",
+        required=True
+    )
+    roblox_user = discord.ui.TextInput(
+        label="What is your Roblox username?",
+        style=discord.TextStyle.short,
+        placeholder="Enter your Roblox username",
+        required=True
+    )
+
+    def __init__(self, guild: discord.Guild, opener: discord.Member):
+        super().__init__()
+        self.guild  = guild
+        self.opener = opener
+
+    async def on_submit(self, interaction: discord.Interaction):
+        cat = self.guild.get_channel(CH["d7_cat"])
+        ow = {
+            self.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            self.opener: discord.PermissionOverwrite(read_messages=True, send_messages=True),
+        }
+        for rid in TICKET_STAFF:
+            r = self.guild.get_role(rid)
+            if r:
+                ow[r] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        ch = await self.guild.create_text_channel(
+            name=f"d7-{self.opener.name}",
+            category=cat,
+            overwrites=ow,
+            topic=str(self.opener.id),
+        )
+        embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab D7 ARMY Ticket")
+        embed.description = (
+            f"{self.opener.mention}, thank you for opening a D7 ARMY ticket!\n\n"
+            "DAN7EH will be with you shortly."
+        )
+        embed.add_field(name="\U0001f4b0 Offering For",      value=str(self.offering),    inline=False)
+        embed.add_field(name="\U0001f3ae Roblox Username",   value=str(self.roblox_user), inline=False)
+        embed.set_footer(text=FOOTER)
+        view = D7TicketView(creator=self.opener.mention)
+        await ch.send(content=self.opener.mention, embed=embed, view=view)
+        await interaction.response.send_message(f"Ticket created: {ch.mention}", ephemeral=True)
+
+
+class D7RequestView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    @discord.ui.button(label="Open D7 ARMY Ticket", style=discord.ButtonStyle.primary,
+                       emoji="\U0001f3ab", custom_id="v:d7_request")
+    async def request(self, interaction: discord.Interaction, btn: discord.ui.Button):
+        guild = interaction.guild
+        cat   = guild.get_channel(CH["d7_cat"])
+        if cat is None:
+            await interaction.response.send_message("Ticket category not found.", ephemeral=True)
+            return
+        for c in cat.channels:
+            if c.topic == str(interaction.user.id):
+                await interaction.response.send_message(
+                    f"You already have an open ticket: {c.mention}", ephemeral=True)
+                return
+        modal = D7Modal(guild=guild, opener=interaction.user)
+        await interaction.response.send_modal(modal)
+
+
+@bot.tree.command(name="setupd7", description="Post the D7 ARMY ticket panel", guild=GUILD)
+async def setup_d7(interaction: discord.Interaction):
+    if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
+        await interaction.response.send_message("No permission.", ephemeral=True)
+        return
+    embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab D7 ARMY Ticket")
+    embed.description = (
+        "Want to make a trade with **DAN7EH**?\n\n"
+        "Click the button below to open a ticket and a staff member will assist you shortly."
+    )
+    embed.set_footer(text=FOOTER)
+    await interaction.channel.send(embed=embed, view=D7RequestView())
+    await interaction.response.send_message("\u2705 D7 ARMY panel deployed.", ephemeral=True)
+
+
 # ─── On Ready ──────────────────────────────────────────────────────────────────
 
 @bot.event
@@ -1491,6 +1614,8 @@ async def on_ready():
     bot.add_view(MercyView())
     bot.add_view(AppRequestView())
     bot.add_view(AppTicketView())
+    bot.add_view(D7RequestView())
+    bot.add_view(D7TicketView())
     bot.tree.copy_global_to(guild=GUILD)
     synced = await bot.tree.sync(guild=GUILD)
     print(f"✅ Synced {len(synced)} commands to guild {GUILD_ID}")
