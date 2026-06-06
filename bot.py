@@ -1553,7 +1553,7 @@ class RyanRbxModal(discord.ui.Modal, title="RyanRbx Ticket"):
         embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab RyanRbx Ticket")
         embed.description = (
             f"{self.opener.mention}, thank you for opening a RyanRbx ticket!\n\n"
-            "DAN7EH will be with you shortly."
+            "RyanRbx will be with you shortly."
         )
         embed.add_field(name="\U0001f4b0 Offering For",      value=str(self.offering),    inline=False)
         embed.add_field(name="\U0001f3ae Roblox Username",   value=str(self.roblox_user), inline=False)
@@ -1584,14 +1584,14 @@ class RyanRbxRequestView(discord.ui.View):
         await interaction.response.send_modal(modal)
 
 
-@bot.tree.command(name="setupRyanRbx", description="Post the RyanRbx ticket panel", guild=GUILD)
+@bot.tree.command(name="setupryanrbx", description="Post the RyanRbx ticket panel", guild=GUILD)
 async def setup_RyanRbx(interaction: discord.Interaction):
     if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("No permission.", ephemeral=True)
         return
     embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab RyanRbx Ticket")
     embed.description = (
-        "Want to make a trade with **DAN7EH**?\n\n"
+        "Want to make a trade with **RyanRbx**?\n\n"
         "Click the button below to open a ticket and a staff member will assist you shortly."
     )
     embed.set_footer(text=FOOTER)
