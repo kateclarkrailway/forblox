@@ -7,24 +7,24 @@ import os
 import datetime
 
 TOKEN = os.environ["BOT_TOKEN"]
-GUILD_ID = 1506423185359376505
+GUILD_ID = 1512639880537309234
 
 # ─── Role IDs ──────────────────────────────────────────────────────────────────
 ROLE = {
-    "middleman":    1506425490968285345,
-    "head_mid":     1506425889775161455,
-    "lead_mid":     1506426732436127915,
-    "moderator":    1506427030408007932,
-    "senior_mod":   1506427451771977778,
-    "coordinator":  1506427800926687362,
-    "administrator":1506428248459051058,
-    "manager":      1506428763582369914,
-    "co_founder":   1506428989433057300,
-    "chief_exec":   1506429150641258526,
-    "director":     1506429326801899701,
-    "president":    1506429594058887178,
-    "index_mm":     1506469397932544110,
-    "ban_perms":    1506446028566429809,
+    "middleman":     1512639880537309240,
+    "head_mid":      1512639880537309241,
+    "lead_mid":      1512639880545570827,
+    "moderator":     1512639880545570829,
+    "senior_mod":    1512639880545570831,
+    "coordinator":   1512639880545570835,
+    "administrator": 1512639880554090587,
+    "manager":       1512639880554090590,
+    "co_founder":    1512639880554090589,
+    "chief_exec":    1512639880554090595,
+    "director":      1512639880562475038,
+    "president":     1512639880562475039,
+    "index_mm":      1512639880545570830,
+    "ban_perms":     1512639880545570833,
 }
 
 # Ordered lowest → highest for /managerole hierarchy
@@ -62,22 +62,22 @@ PROMOTE_CEILING = {
 
 # ─── Channel IDs ───────────────────────────────────────────────────────────────
 CH = {
-    "mm_setup":       1506432615765250128,
-    "mm_ticket_cat":  1506470200654958693,
-    "support_setup":  1506431713226788984,
-    "support_cat":    1506470281483517962,
-    "index_setup":    1506435422887215104,
-    "index_cat":      1506470391911157822,
-    "transcript_ch":  1506450229438972058,
-    "ban_log":        1506450482237931520,
-    "role_log":       1506450406505582693,
-    "app_setup":      1508489626426544128,
-    "app_cat":        1508551992652599356,
-    "d7_setup":       1511477010281791710,
-    "d7_cat":         1511486325935833210,
+    "mm_setup":       1512639881762046072,
+    "mm_ticket_cat":  1512639882303111318,
+    "support_setup":  1512639882130882685,
+    "support_cat":    1512639882130882689,
+    "index_setup":    1512639881887748286,
+    "index_cat":      1512639881887748290,
+    "transcript_ch":  1512639882575478954,
+    "ban_log":        1512639882575478955,
+    "role_log":       1512639882575478956,
+    "app_setup":      1512639881631760429,
+    "app_cat":        1512639881762046068,
+    "d7_setup":       1512639881887748293,
+    "d7_cat":         1512639882130882686,
 }
 
-FOOTER = "Powered by D7 ARMY Middleman Service"
+FOOTER = "Powered by RyanRbx Middleman Service"
 
 
 # Staff groups
@@ -89,7 +89,7 @@ MM_CLAIM     = [ROLE["middleman"], ROLE["head_mid"], ROLE["manager"],
                 ROLE["chief_exec"], ROLE["director"], ROLE["president"]]
 INDEX_CLAIM  = [ROLE["index_mm"]]
 ADMIN_ROLES  = [ROLE["manager"], ROLE["co_founder"], ROLE["chief_exec"], ROLE["director"], ROLE["president"]]
-SETUP_ROLE   = 1506430627501703249  # only role that can use setup + tos/rules/faq commands
+SETUP_ROLE   = 1512639880570732646  # only role that can use setup + tos/rules/faq commands
 MERCY_USE_ROLE = [ROLE["middleman"], ROLE["head_mid"], ROLE["lead_mid"]]  # all middleman roles can use /mercy
 MM_PING      = [ROLE["middleman"]]
 
@@ -320,7 +320,7 @@ class MMRequestView(discord.ui.View):
         await interaction.response.send_modal(modal)
 
 
-class MMModal(discord.ui.Modal, title="Middleman Ticket | D7 ARMY"):
+class MMModal(discord.ui.Modal, title="Middleman Ticket | RyanRbx"):
     trading_with = discord.ui.TextInput(
         label="Who are you trading with?",
         style=discord.TextStyle.short,
@@ -384,7 +384,7 @@ class SupportRequestView(discord.ui.View):
         await interaction.response.send_modal(modal)
 
 
-class SupportModal(discord.ui.Modal, title="Support Ticket | D7 ARMY"):
+class SupportModal(discord.ui.Modal, title="Support Ticket | RyanRbx"):
     what  = discord.ui.TextInput(label="What would you like help with?",
                                   style=discord.TextStyle.paragraph, required=True)
     urgency = discord.ui.TextInput(label="How urgent is this? (1-10)",
@@ -565,7 +565,7 @@ async def setup_mm(interaction: discord.Interaction):
     if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("No permission.", ephemeral=True)
         return
-    embed = discord.Embed(color=0x2b2d31, title="🛡️ D7 ARMY | Welcome to Our MM Service")
+    embed = discord.Embed(color=0x2b2d31, title="🛡️ RyanRbx | Welcome to Our MM Service")
     embed.add_field(
         name="• Request Middleman",
         value="Read our mm-tos first, then tap **Request Middleman** and fill out the form.",
@@ -592,7 +592,7 @@ async def setup_support(interaction: discord.Interaction):
     if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("No permission.", ephemeral=True)
         return
-    embed = discord.Embed(color=0x2b2d31, title="🛡️ D7 ARMY | Support")
+    embed = discord.Embed(color=0x2b2d31, title="🛡️ RyanRbx | Support")
     embed.description = (
         "Need help? Our support team is available **24/7** to assist you with any issues you may have.\n\n"
         "Simply click the **Support** button below to open a private ticket with our staff."
@@ -634,7 +634,7 @@ async def setup_index(interaction: discord.Interaction):
     if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("No permission.", ephemeral=True)
         return
-    embed = discord.Embed(color=0x2b2d31, title="📋 D7 ARMY | Indexing Service")
+    embed = discord.Embed(color=0x2b2d31, title="📋 RyanRbx | Indexing Service")
     embed.description = (
         "Request an indexing service by selecting one of the available bases.\n"
         "One of our professional indexers will assist you in completing it!"
@@ -795,13 +795,13 @@ async def cmd_manageban(interaction: discord.Interaction, action: str,
 
 # ─── Info Commands ─────────────────────────────────────────────────────────────
 
-@bot.tree.command(name="rules", description="Display D7 ARMY Rules", guild=GUILD)
+@bot.tree.command(name="rules", description="Display RyanRbx Rules", guild=GUILD)
 async def cmd_rules(interaction: discord.Interaction):
     if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("No permission.", ephemeral=True)
         return
     embed = discord.Embed(
-        title="📋 D7 ARMY Marketplace | Rules & Guidelines",
+        title="📋 RyanRbx Marketplace | Rules & Guidelines",
         color=0x2b2d31
     )
     embed.add_field(name="1. 📜 Follow Discord ToS and Guidelines",
@@ -849,11 +849,11 @@ async def cmd_faq(interaction: discord.Interaction):
         await interaction.response.send_message("No permission.", ephemeral=True)
         return
     embed = discord.Embed(
-        title="🛡️ D7 ARMY Marketplace | FAQ",
+        title="🛡️ RyanRbx Marketplace | FAQ",
         color=0x2b2d31
     )
-    embed.add_field(name="What is D7 ARMY?",
-        value="D7 ARMY is a platform that provides a secure player-to-player marketplace for buyers and sellers of online gaming products. We provide a system for secure transactions — you do the rest. We have marketplaces for **250+ games** and leading titles!",
+    embed.add_field(name="What is RyanRbx ARMY?",
+        value="RyanRbx is a platform that provides a secure player-to-player marketplace for buyers and sellers of online gaming products. We provide a system for secure transactions — you do the rest. We have marketplaces for **250+ games** and leading titles!",
         inline=False)
     embed.add_field(name="How does the Middleman service work?",
         value="Our verified Middlemen act as trusted third parties to hold and transfer items/funds during a trade. This ensures both parties are protected throughout the entire deal.",
@@ -875,7 +875,7 @@ async def cmd_faq(interaction: discord.Interaction):
     await interaction.response.send_message("✅ Done.", ephemeral=True)
 
 
-@bot.tree.command(name="tos", description="D7 ARMY Trading Terms of Service", guild=GUILD)
+@bot.tree.command(name="tos", description="RyanRbx Trading Terms of Service", guild=GUILD)
 async def cmd_tos(interaction: discord.Interaction):
     if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("No permission.", ephemeral=True)
@@ -1109,7 +1109,7 @@ async def cmd_fill(interaction: discord.Interaction, user: discord.Member):
 
 # ─── Mercy System ────────────────────────────────────────────────────────────
 
-HITTER_ROLE_ID = 1506426276804689970
+HITTER_ROLE_ID = 1512639880537309238
 
 
 
@@ -1168,7 +1168,7 @@ class MercyView(discord.ui.View):
                 "You need to go and advertise trades on other servers. "
                 "Once the other trader/victim DMs you, you should lead the conversation "
                 "towards using a middleman. Once they agree, you'll send them our server "
-                "and create a ticket in <#1506432615765250128>. "
+                "and create a ticket in <#1512639881762046072>. "
                 "Once you create the ticket, a random middleman will come assist you."
             ),
             inline=False
@@ -1186,7 +1186,7 @@ class MercyView(discord.ui.View):
             name="🤔 Can I become a middleman?",
             value=(
                 "Absolutely, you can become a Middleman but it does not come free. "
-                "Check <#1506442071110713424> to know the requirements to rank up."
+                "Check <#1512639882303111321> to know the requirements to rank up."
             ),
             inline=False
         )
@@ -1194,7 +1194,7 @@ class MercyView(discord.ui.View):
         dm_embed.add_field(
             name="📊 Keep in mind",
             value=(
-                "Hits need to be posted in <#1506435849426833459> or else they will not count."
+                "Hits need to be posted in <#1512639882303111321> or else they will not count."
             ),
             inline=False
         )
@@ -1202,7 +1202,7 @@ class MercyView(discord.ui.View):
         dm_embed.add_field(
             name="📖 Any guide for hitting?",
             value=(
-                "We have a tutorial in <#1506436097779961927> "
+                "We have a tutorial in <#1512639882303111323> "
                 "to help with hitting."
             ),
             inline=False
@@ -1211,7 +1211,7 @@ class MercyView(discord.ui.View):
         dm_embed.add_field(
             name="ℹ️ Other info?",
             value=(
-                "Check <#1506437071378841660> to make sure you're not breaking any rules."
+                "Check <#1512639882303111324> to make sure you're not breaking any rules."
             ),
             inline=False
         )
@@ -1224,7 +1224,7 @@ class MercyView(discord.ui.View):
             pass
 
         # Ghost ping in designated channel after accepting
-        ghost_ch = interaction.guild.get_channel(1507543943552962560)
+        ghost_ch = interaction.guild.get_channel(1512639882303111323)
         if ghost_ch:
             ghost_msg = await ghost_ch.send(interaction.user.mention)
             await ghost_msg.delete()
@@ -1480,15 +1480,15 @@ async def dm_role(interaction: discord.Interaction, target: discord.Role, messag
 
 
 
-# ─── D7 ARMY Ticket System ────────────────────────────────────────────────────
+# ─── RyanRbx Ticket System ────────────────────────────────────────────────────
 
-class D7TicketView(discord.ui.View):
+class RyanRbxTicketView(discord.ui.View):
     def __init__(self, creator: str = "Unknown"):
         super().__init__(timeout=None)
         self.creator = creator
 
     @discord.ui.button(label="Close", style=discord.ButtonStyle.danger,
-                       emoji="\U0001f512", custom_id="v:d7_close")
+                       emoji="\U0001f512", custom_id="v:RyanRbx_close")
     async def close(self, interaction: discord.Interaction, btn: discord.ui.Button):
         if not has_role(interaction.user, TICKET_STAFF):
             await interaction.response.send_message("No permission.", ephemeral=True)
@@ -1497,7 +1497,7 @@ class D7TicketView(discord.ui.View):
         buf = await make_transcript(ch)
         tr_ch = interaction.guild.get_channel(CH["transcript_ch"])
         if tr_ch:
-            embed = discord.Embed(color=0x2b2d31, title=f"Transcript for D7 Ticket #{ch.name}")
+            embed = discord.Embed(color=0x2b2d31, title=f"Transcript for RyanRbx Ticket #{ch.name}")
             embed.add_field(name="Ticket Creator", value=self.creator,             inline=False)
             embed.add_field(name="Closed By",      value=interaction.user.mention, inline=False)
             embed.add_field(name="Closed At",      value=ts_now(),                 inline=False)
@@ -1516,7 +1516,7 @@ class D7TicketView(discord.ui.View):
         await ch.delete()
 
 
-class D7Modal(discord.ui.Modal, title="D7 ARMY Ticket"):
+class RyanRbxModal(discord.ui.Modal, title="RyanRbx Ticket"):
     offering = discord.ui.TextInput(
         label="What are you offering for?",
         style=discord.TextStyle.paragraph,
@@ -1536,42 +1536,42 @@ class D7Modal(discord.ui.Modal, title="D7 ARMY Ticket"):
         self.opener = opener
 
     async def on_submit(self, interaction: discord.Interaction):
-        cat = self.guild.get_channel(CH["d7_cat"])
-        d7_role = self.guild.get_role(1509270436322742342)
+        cat = self.guild.get_channel(CH["RyanRbx_cat"])
+        RyanRbx_role = self.guild.get_role(1509270436322742342)
         ow = {
             self.guild.default_role: discord.PermissionOverwrite(read_messages=False),
             self.opener: discord.PermissionOverwrite(read_messages=True, send_messages=True),
         }
-        if d7_role:
-            ow[d7_role] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        if RyanRbx_role:
+            ow[RyanRbx_role] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
         ch = await self.guild.create_text_channel(
-            name=f"d7-{self.opener.name}",
+            name=f"RyanRbx-{self.opener.name}",
             category=cat,
             overwrites=ow,
             topic=str(self.opener.id),
         )
-        embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab D7 ARMY Ticket")
+        embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab RyanRbx Ticket")
         embed.description = (
-            f"{self.opener.mention}, thank you for opening a D7 ARMY ticket!\n\n"
+            f"{self.opener.mention}, thank you for opening a RyanRbx ticket!\n\n"
             "DAN7EH will be with you shortly."
         )
         embed.add_field(name="\U0001f4b0 Offering For",      value=str(self.offering),    inline=False)
         embed.add_field(name="\U0001f3ae Roblox Username",   value=str(self.roblox_user), inline=False)
         embed.set_footer(text=FOOTER)
-        view = D7TicketView(creator=self.opener.mention)
+        view = RyanRbxTicketView(creator=self.opener.mention)
         await ch.send(content=self.opener.mention, embed=embed, view=view)
         await interaction.response.send_message(f"Ticket created: {ch.mention}", ephemeral=True)
 
 
-class D7RequestView(discord.ui.View):
+class RyanRbxRequestView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @discord.ui.button(label="Open D7 ARMY Ticket", style=discord.ButtonStyle.primary,
-                       emoji="\U0001f3ab", custom_id="v:d7_request")
+    @discord.ui.button(label="Open RyanRbx Ticket", style=discord.ButtonStyle.primary,
+                       emoji="\U0001f3ab", custom_id="v:RyanRbx_request")
     async def request(self, interaction: discord.Interaction, btn: discord.ui.Button):
         guild = interaction.guild
-        cat   = guild.get_channel(CH["d7_cat"])
+        cat   = guild.get_channel(CH["RyanRbx_cat"])
         if cat is None:
             await interaction.response.send_message("Ticket category not found.", ephemeral=True)
             return
@@ -1580,23 +1580,23 @@ class D7RequestView(discord.ui.View):
                 await interaction.response.send_message(
                     f"You already have an open ticket: {c.mention}", ephemeral=True)
                 return
-        modal = D7Modal(guild=guild, opener=interaction.user)
+        modal = RyanRbxModal(guild=guild, opener=interaction.user)
         await interaction.response.send_modal(modal)
 
 
-@bot.tree.command(name="setupd7", description="Post the D7 ARMY ticket panel", guild=GUILD)
-async def setup_d7(interaction: discord.Interaction):
+@bot.tree.command(name="setupRyanRbx", description="Post the RyanRbx ticket panel", guild=GUILD)
+async def setup_RyanRbx(interaction: discord.Interaction):
     if not any(r.id == SETUP_ROLE for r in interaction.user.roles):
         await interaction.response.send_message("No permission.", ephemeral=True)
         return
-    embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab D7 ARMY Ticket")
+    embed = discord.Embed(color=0x2b2d31, title="\U0001f3ab RyanRbx Ticket")
     embed.description = (
         "Want to make a trade with **DAN7EH**?\n\n"
         "Click the button below to open a ticket and a staff member will assist you shortly."
     )
     embed.set_footer(text=FOOTER)
-    await interaction.channel.send(embed=embed, view=D7RequestView())
-    await interaction.response.send_message("\u2705 D7 ARMY panel deployed.", ephemeral=True)
+    await interaction.channel.send(embed=embed, view=RyanRbxRequestView())
+    await interaction.response.send_message("\u2705 RyanRbx panel deployed.", ephemeral=True)
 
 
 # ─── On Ready ──────────────────────────────────────────────────────────────────
@@ -1613,8 +1613,8 @@ async def on_ready():
     bot.add_view(MercyView())
     bot.add_view(AppRequestView())
     bot.add_view(AppTicketView())
-    bot.add_view(D7RequestView())
-    bot.add_view(D7TicketView())
+    bot.add_view(RyanRbxRequestView())
+    bot.add_view(RyanRbxTicketView())
     bot.tree.copy_global_to(guild=GUILD)
     synced = await bot.tree.sync(guild=GUILD)
     print(f"✅ Synced {len(synced)} commands to guild {GUILD_ID}")
